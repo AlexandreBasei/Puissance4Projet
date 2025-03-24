@@ -23,16 +23,47 @@ class Pui4ViewController: UIViewController {
     var directions : [(Int,Int)] = [(0, -1), (-1, -1), (-1,0), (1,-1)]      // dans l'ordre gauche, diagonale gh, haut, diagonale droite-haut
     
     
+    @IBAction func insertCoin(_ sender: UIButton) {
+        let result = mettreJeton(x: sender.tag)
+            
+            if result.0 {
+                let (row, col) = result.1
+                animJeton(colonne: col, ligne: row, couleur: currPlayer)
+            }
+    }
+    
+    func animJeton(colonne: Int, ligne: Int, couleur: Int) {
+        let tailleJeton: CGFloat = 40  // Taille du jeton
+        let startX = CGFloat(colonne) * (tailleJeton + 5) + 20  // Position de départ en X
+        let startY: CGFloat = 20  // Position de départ en haut de l'écran
+        let finalY = CGFloat(ligne) * (tailleJeton + 5) + 100  // Destination en Y
+
+        // Sélection de l'image selon le joueur
+        let jeton = UIImageView(image: UIImage(named: "CoinJ"+String(couleur)))
+        jeton.frame = CGRect(x: startX, y: startY, width: tailleJeton, height: tailleJeton)
+        
+        self.view.addSubview(jeton) // Ajout du jeton à la vue principale
+
+        // Animation de chute
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+            jeton.frame.origin.y = finalY
+        } completion: { _ in
+            print("Jeton inséré en (\(ligne), \(colonne))")
+        }
+    }
+    
     func mettreJeton(x: Int)->(Bool,(Int,Int)) {
         for i in (0..<Grille.count).reversed() {
-            // on regarde à quelle ligne, la collone chosie est libre (donc on part du bas vers le haut car c'est plus simple dans notre esprit)
+            // on regarde à quelle ligne, la colonne chosie est libre (donc on part du bas vers le haut car c'est plus simple dans notre esprit)
             
             if Grille[i][x]==0{
                 Grille[i][x]=currPlayer
                 lastCoin=(i,x)
+                print(Grille)
                 return (true, lastCoin)
             }
         }
+        print(Grille)
         return (false, (-1,-1))
         // si y'a pas de place, ça renvoie false
     }
