@@ -20,31 +20,28 @@ class Pui4ViewController: UIViewController {
     
     var lastCoin : [Int]=[0,0]
     
-    func victoryCheck() {
-        
-        
+    var directions : [(Int,Int)] = [(0, -1), (-1, -1), (-1,0), (1,-1)]
+    
+    func victoryCheck() -> Bool {
+        for (dx,dy) in directions {
+            let total = 1 + checkDirections(dir:(dx, dy)) + checkDirections(dir:(-dx, -dy))
+            if total >= 4 {
+                return true
+            }
+        }
+        return false
     }
     
-    func check(coin:[Int])-> Int {
-        var cpt = 1
-        let x=coin[0];let y=coin[1]
-        if x != 0 {
-            if y != 0 {
-                
-            }
-            if y != Grille.count{
-                
-            }
+    func checkDirections(dir:(Int,Int))-> Int {
+        var count=0
+        var coinX = lastCoin[0]; var coinY = lastCoin[1]
+        
+        while 0 <= coinX && coinX < Grille[0].count && 0 <= coinY && coinY < Grille.count && Grille[coinY][coinX]==currPlayer{
+            count += 1
+            coinX += dir.0
+            coinY += dir.1
         }
-        if x != Grille[0].count {
-            if y != 0 {
-                
-            }
-            if y != Grille.count{
-                
-            }
-        }
-        return 0
+        return count
     }
             
             
