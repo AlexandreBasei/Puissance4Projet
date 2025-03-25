@@ -8,7 +8,7 @@
 import UIKit
 
 class Pui4ViewController: UIViewController {
-    
+    var nbPlayer = 1
     var currPlayer = 1
     var Grille : [[Int]] =
             [ [0,0,0,0,0,0,0],
@@ -19,62 +19,146 @@ class Pui4ViewController: UIViewController {
               [0,0,0,0,0,0,0],]
     
     var lastCoin : (Int,Int) = (-1,-1)
+    var lastAiCoin : (Int,Int) = (-1,-1)
     
     var directions : [(Int,Int)] = [(0, -1), (-1, -1), (-1,0), (1,-1)]      // dans l'ordre gauche, diagonale gh, haut, diagonale droite-haut
     
     
+    @IBOutlet var buttons: [UIButton]!
+    
     @IBOutlet var grilleImage: UIImageView!
+    
+    
     @IBAction func insertCoin(_ sender: UIButton) {
-        
         let result = mettreJeton(x: sender.tag)
         
         if result.0 {
             let (row, col) = result.1
             
             animJeton(colonne: col, ligne: row, couleur: currPlayer)
+            
+            if checkCombinaisons(cible: 4, player: currPlayer, coin:lastCoin).0 {
+                print("Joueur n°\(currPlayer) a gagné")
+                for i in buttons {
+                    i.isEnabled = false
+                }
+            }
             currPlayer = (currPlayer == 1) ? 2 : 1
             
-            // Désactiver tous les boutons avant que l'IA joue
-            for button in self.view.subviews where button is UIButton {
-                (button as? UIButton)?.isEnabled = false
+            if nbPlayer==1 && currPlayer == 2 {
+                iaJouer()
+                
             }
-            //Attendre 3s avant la suite du code pour simuler la réflexion de l'IA
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [self] in
-                //Tour de l'IA
-                if self.checkCombinaisons(cible: 3, player: 1) {
-                    print("3 alignés pour le joueur")
-                }
-                else if self.checkCombinaisons(cible: 3, player: 2) {
-                    print("3 alignés pour l'ia")
-                }
-                else if self.checkCombinaisons(cible: 2, player: 2) {
-                    print("2 alignés pour l'ia")
-                }
-//                else if self.checkCombinaisons(cible: 1, player: 2) {
-//                    print("1 aligné pour l'ia")
-//                }
-                else {
-                    let result = self.mettreJeton(x: sender.tag)
-                    
+            print(lastCoin, lastAiCoin)
+        }
+    }
+    
+    func iaJouer() {
+        var door = true
+        // Désactiver tous les boutons avant que l'IA joue
+        for i in buttons {
+            i.isEnabled = false
+        }
+        //Attendre 3s avant la suite du code pour simuler la réflexion de l'IA
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [self] in
+        //Tour de l'IA
+            if checkCombinaisons(cible: 3, player: 2, coin:lastAiCoin).0 {
+                print("3 alignés pour l'ia")
+                
+                let res = checkIaAxe(player: 2, dir: checkCombinaisons(cible: 3, player: 1,coin:lastAiCoin).1,coin:lastAiCoin)
+                
+                print(res)
+                
+                
+                if res.0 {
+                    door = false
+                    let result = mettreJeton(x: res.1.1)
                     if result.0 {
-                        let randomX = Int.random(in: 0...6)
-                        
-                        let result = mettreJeton(x: randomX)
-                        
                         let (row, col) = result.1
-                        
-                        self.animJeton(colonne: col, ligne: row, couleur: currPlayer)
+                        animJeton(colonne: col, ligne: row, couleur: currPlayer)
+                        lastAiCoin = lastCoin
                         currPlayer = (self.currPlayer == 1) ? 2 : 1
-            
-                        //Réactiver tous les boutons après que l'IA ait joué
-                        for button in self.view.subviews where button is UIButton {
-                            (button as? UIButton)?.isEnabled = true
-                        }
+                    }
+                }
+                
+            }
+            if checkCombinaisons(cible: 3, player: 1, coin:lastCoin).0 && door == true{
+                print("3 alignés pour le joueur")
+                
+                let res = checkIaAxe(player: 1, dir: checkCombinaisons(cible: 3, player: 1, coin:lastCoin).1, coin:lastCoin)
+                print(res)
+                
+                if res.0 {
+                    door = false
+                    let result = mettreJeton(x: res.1.1)
+                    if result.0 {
+                        let (row, col) = result.1
+                        animJeton(colonne: col, ligne: row, couleur: currPlayer)
+                        lastAiCoin = lastCoin
+                        currPlayer = (self.currPlayer == 1) ? 2 : 1
                     }
                 }
             }
+            if checkCombinaisons(cible: 2, player: 2, coin:lastAiCoin).0 && door               == true{
+                print("2 alignés pour l'ia")
+            }
+            if checkCombinaisons(cible: 1, player: 2, coin:lastAiCoin).0 && door == true{
+                print("1 aligné pour l'ia")
+            }
+            if door == true {
+                let randomX = Int.random(in: 0...6)
+                let result = mettreJeton(x: randomX)
+                
+                if result.0 {
+                    let (row, col) = result.1
+                    animJeton(colonne: col, ligne: row, couleur: currPlayer)
+                    lastAiCoin = lastCoin
+                    currPlayer = (self.currPlayer == 1) ? 2 : 1
+            
+                }
+            }
+            //Réactiver tous les boutons après que l'IA ait joué
+            for i in buttons {
+                i.isEnabled = true
+            }
+            print(lastCoin,lastAiCoin)
         }
     }
+    
+    func checkIaAxe(player: Int, dir: (Int, Int), coin: (Int,Int)) -> (Bool, (Int,Int))  {
+        let (dirX,dirY)=dir
+        
+        let checkDirMin = checkIaDirection(player: player, dir: (-dirX,-dirY),
+                                           coin: coin)
+        let checkDirPos = checkIaDirection(player: player, dir: (dirX,dirY),
+                                           coin: coin)
+        
+        if checkDirMin.0{
+            return checkDirMin
+        } else if checkDirPos.0 {
+            return checkDirPos
+        } else {
+            return checkDirMin
+        }
+    }
+    
+    func checkIaDirection(player: Int, dir: (Int, Int), coin: (Int,Int)) -> (Bool, (Int,Int)) {
+        var (coinY, coinX) = coin
+        
+        while 0 <= coinX && coinX < Grille[0].count && 0 <= coinY && coinY < Grille.count && Grille[coinY][coinX]==player {
+            // parcours de l'axe jusqu'à une couleur différente.
+            coinX += dir.0
+            coinY += dir.1
+        }
+        if 0 <= coinX && coinX < Grille[0].count && 0 <= coinY && coinY < Grille.count {
+            if Grille[coinY][coinX]==0{
+                return (true,(coinY,coinX))
+            }
+        }
+        return (false,(-1,-1))
+    }
+    
+    
     
     func animJeton(colonne: Int, ligne: Int, couleur: Int) {
         let tailleJeton: CGFloat = 40  // Taille du jeton
@@ -107,35 +191,28 @@ class Pui4ViewController: UIViewController {
             if Grille[i][x]==0{
                 Grille[i][x]=currPlayer
                 lastCoin=(i,x)
-                print(Grille)
-                
-                if checkCombinaisons(cible: 4, player: currPlayer) {
-                    print("gagné")
-                }
-                
                 return (true, lastCoin)
             }
         }
-        print(Grille)
         return (false, (-1,-1))
         // si y'a pas de place, ça renvoie false
     }
     
-    func checkCombinaisons(cible: Int, player: Int) -> Bool {
+    func checkCombinaisons(cible: Int, player: Int, coin: (Int,Int)) -> (Bool,(Int,Int)) {
         for (dx,dy) in directions {
-            let total = 1 + checkDirections(dir:(dx, dy), player:player) + checkDirections(dir:(-dx, -dy), player:player)
+            let total = 1 + checkDirections(dir:(dx, dy), player:player, coin:coin) + checkDirections(dir:(-dx, -dy), player:player, coin:coin)
             // on regarde les axes horizontal, diagonal hg->bd, vertical et diagonal hd->bg
             
             if total >= cible {
-                return true
+                return (true,(dx,dy))
             }
         }
-        return false
+        return (false,(0,0))
     }
     
-    func checkDirections(dir:(Int,Int), player: Int)-> Int {
+    func checkDirections(dir:(Int,Int), player: Int, coin: (Int,Int))-> Int {
         var count=0
-        var coinX = lastCoin.0; var coinY = lastCoin.1
+        var (coinY, coinX) = coin
         
         while 0 <= coinX && coinX < Grille[0].count && 0 <= coinY && coinY < Grille.count && Grille[coinY][coinX]==player {
             // parcours de l'axe jusqu'à une couleur différente.
@@ -143,7 +220,7 @@ class Pui4ViewController: UIViewController {
             coinX += dir.0
             coinY += dir.1
         }
-        return count
+        return count - 1 //On soustrait 1 car on a compté le jeton actuel deux fois
     }
             
             
