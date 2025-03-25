@@ -22,6 +22,7 @@ class Pui4ViewController: UIViewController {
     
     var directions : [(Int,Int)] = [(0, -1), (-1, -1), (-1,0), (1,-1)]      // dans l'ordre gauche, diagonale gh, haut, diagonale droite-haut
     
+    @IBOutlet var buttons: [UIButton]!
     
     @IBAction func insertCoin(_ sender: UIButton) {
         let result = mettreJeton(x: sender.tag)
@@ -29,6 +30,15 @@ class Pui4ViewController: UIViewController {
             if result.0 {
                 let (row, col) = result.1
                 animJeton(colonne: col, ligne: row, couleur: currPlayer)
+                
+                
+                if victoryCheck() {
+                    print("joueur n°\(currPlayer) a gagné")
+                    for i in buttons {
+                        i.isEnabled=false
+                    }
+                }
+                currPlayer = 3 - currPlayer
             }
     }
     
@@ -69,10 +79,10 @@ class Pui4ViewController: UIViewController {
     }
     
     func victoryCheck() -> Bool {
-        for (dx,dy) in directions {
-            let total = 1 + checkDirections(dir:(dx, dy)) + checkDirections(dir:(-dx, -dy))
-            // on regarde les axes horizontal, diagonal hg->bd, vertical et diagonal hd->bg
-            
+        for (dx, dy) in directions {
+            let total = 1 + checkDirections(dir: (dx, dy)) + checkDirections(dir: (-dx, -dy))
+            // On commence à 1 car on compte le jeton actuel
+
             if total >= 4 {
                 return true
             }
@@ -80,17 +90,18 @@ class Pui4ViewController: UIViewController {
         return false
     }
     
-    func checkDirections(dir:(Int,Int))-> Int {
-        var count=0
-        var coinX = lastCoin.0; var coinY = lastCoin.1
+    func checkDirections(dir: (Int, Int)) -> Int {
+        var count = 0
+        var (coinY, coinX) = lastCoin
         
-        while 0 <= coinX && coinX < Grille[0].count && 0 <= coinY && coinY < Grille.count && Grille[coinY][coinX]==currPlayer {
-            // parcours de l'axe jusqu'à une couleur différente.
+        while 0 <= coinX && coinX < Grille[0].count && 0 <= coinY && coinY < Grille.count && Grille[coinY][coinX] == currPlayer {
+            //parcours de l'axe jusqu'a une valeur différente
+            
             count += 1
             coinX += dir.0
             coinY += dir.1
         }
-        return count
+        return count - 1 // On soustrait 1 car on a compté le jeton actuel deux fois
     }
             
             

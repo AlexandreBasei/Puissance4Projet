@@ -103,10 +103,6 @@
                                     <action selector="insertCoin:" destination="AtO-nx-1Mu" eventType="touchUpInside" id="jrX-jX-o3r"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="PX2-ts-sox">
-                                <rect key="frame" x="85" y="494" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </imageView>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yww-h9-i2X">
                                 <rect key="frame" x="85" y="494" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -116,10 +112,6 @@
                                     <action selector="insertCoin:" destination="AtO-nx-1Mu" eventType="touchUpInside" id="O5g-jf-vvE"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="pPG-Yf-6tp">
-                                <rect key="frame" x="131" y="494" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </imageView>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4XI-PZ-SGP">
                                 <rect key="frame" x="131" y="494" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -129,10 +121,6 @@
                                     <action selector="insertCoin:" destination="AtO-nx-1Mu" eventType="touchUpInside" id="m8N-Sb-hzr"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="R7a-qu-l2W">
-                                <rect key="frame" x="177" y="494" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </imageView>
                             <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nNQ-aL-UYl">
                                 <rect key="frame" x="177" y="494" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -142,10 +130,6 @@
                                     <action selector="insertCoin:" destination="AtO-nx-1Mu" eventType="touchUpInside" id="KsP-Os-nlv"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="zq9-1b-azX">
-                                <rect key="frame" x="223" y="494" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </imageView>
                             <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ziE-Nd-aGM">
                                 <rect key="frame" x="223" y="494" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -155,10 +139,6 @@
                                     <action selector="insertCoin:" destination="AtO-nx-1Mu" eventType="touchUpInside" id="TV5-Zd-2lg"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="Xb7-sb-DSs">
-                                <rect key="frame" x="269" y="494" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </imageView>
                             <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1gN-8Q-nLe">
                                 <rect key="frame" x="269" y="494" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -168,10 +148,6 @@
                                     <action selector="insertCoin:" destination="AtO-nx-1Mu" eventType="touchUpInside" id="aKp-qb-xPy"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="MEd-Ri-EDr">
-                                <rect key="frame" x="314" y="494" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </imageView>
                             <button opaque="NO" tag="6" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b3Z-xT-Io6">
                                 <rect key="frame" x="314" y="494" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -181,11 +157,46 @@
                                     <action selector="insertCoin:" destination="AtO-nx-1Mu" eventType="touchUpInside" id="Zhv-qR-Ku9"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="PX2-ts-sox">
+                                <rect key="frame" x="85" y="494" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="pPG-Yf-6tp">
+                                <rect key="frame" x="131" y="494" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="R7a-qu-l2W">
+                                <rect key="frame" x="177" y="494" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="zq9-1b-azX">
+                                <rect key="frame" x="223" y="494" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="Xb7-sb-DSs">
+                                <rect key="frame" x="269" y="494" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="fleche" translatesAutoresizingMaskIntoConstraints="NO" id="MEd-Ri-EDr">
+                                <rect key="frame" x="314" y="494" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="DMf-ba-cXR"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="bQc-M3-4VX"/>
+                    <connections>
+                        <outletCollection property="buttons" destination="U0H-Qf-ydp" collectionClass="NSMutableArray" id="i2h-F1-Pr8"/>
+                        <outletCollection property="buttons" destination="yww-h9-i2X" collectionClass="NSMutableArray" id="oot-ey-hTn"/>
+                        <outletCollection property="buttons" destination="4XI-PZ-SGP" collectionClass="NSMutableArray" id="buB-Ok-S5D"/>
+                        <outletCollection property="buttons" destination="4XI-PZ-SGP" collectionClass="NSMutableArray" id="HMi-Om-6yZ"/>
+                        <outletCollection property="buttons" destination="4XI-PZ-SGP" collectionClass="NSMutableArray" id="i3s-Om-aS7"/>
+                        <outletCollection property="buttons" destination="nNQ-aL-UYl" collectionClass="NSMutableArray" id="8Qc-8B-RFX"/>
+                        <outletCollection property="buttons" destination="ziE-Nd-aGM" collectionClass="NSMutableArray" id="XZN-7L-YBj"/>
+                        <outletCollection property="buttons" destination="1gN-8Q-nLe" collectionClass="NSMutableArray" id="VGE-Xi-9qB"/>
+                        <outletCollection property="buttons" destination="b3Z-xT-Io6" collectionClass="NSMutableArray" id="T5A-A6-FGY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CvE-le-Bif" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
