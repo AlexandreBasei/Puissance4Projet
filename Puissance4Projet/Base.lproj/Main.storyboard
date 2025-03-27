@@ -188,6 +188,13 @@
                     <navigationItem key="navigationItem" id="bQc-M3-4VX"/>
                     <connections>
                         <outlet property="grilleImage" destination="0vB-2R-NdC" id="YPm-2J-tVk"/>
+                        <outletCollection property="buttons" destination="U0H-Qf-ydp" collectionClass="NSMutableArray" id="TfD-V0-p4z"/>
+                        <outletCollection property="buttons" destination="yww-h9-i2X" collectionClass="NSMutableArray" id="B72-ah-xze"/>
+                        <outletCollection property="buttons" destination="4XI-PZ-SGP" collectionClass="NSMutableArray" id="ksc-pi-VBE"/>
+                        <outletCollection property="buttons" destination="nNQ-aL-UYl" collectionClass="NSMutableArray" id="PWG-4u-D0u"/>
+                        <outletCollection property="buttons" destination="ziE-Nd-aGM" collectionClass="NSMutableArray" id="w35-k6-mob"/>
+                        <outletCollection property="buttons" destination="1gN-8Q-nLe" collectionClass="NSMutableArray" id="FfL-u1-FQ1"/>
+                        <outletCollection property="buttons" destination="b3Z-xT-Io6" collectionClass="NSMutableArray" id="SEY-Z3-fzt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CvE-le-Bif" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
