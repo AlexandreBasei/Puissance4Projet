@@ -5,6 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="UIMenu" message="Requires Xcode 11 or later." minToolsVersion="11.0" requiredIntegratedClassName="UICommandDiff"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -33,50 +34,86 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KeC-ul-N1m">
-                                <rect key="frame" x="162" y="409" width="68" height="35"/>
+                                <rect key="frame" x="162" y="713" width="68" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Jouer"/>
                                 <connections>
-                                    <segue destination="7N4-8o-Qpp" kind="show" id="k3w-y6-SQm"/>
+                                    <action selector="jouer:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uQp-FM-bTX"/>
+                                    <segue destination="AtO-nx-1Mu" kind="show" id="cZm-YP-Weg"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="p4Title" translatesAutoresizingMaskIntoConstraints="NO" id="z9j-IN-l3x">
+                                <rect key="frame" x="23" y="27" width="347" height="174"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mai-9A-dCp">
+                                <rect key="frame" x="97" y="373" width="199" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
+                                <menu key="menu" id="XkQ-OS-nsc">
+                                    <children>
+                                        <command title="1 joueur (vs IA)" discoverabilityTitle="1 joueur (vs IA)" id="Yqb-Tn-0UI">
+                                            <connections>
+                                                <action selector="playerNumberSelection:" destination="dkx-z0-nzr" id="RYj-jI-qPJ"/>
+                                            </connections>
+                                        </command>
+                                        <command title="2 joueurs" discoverabilityTitle="2 joueurs" id="Vzt-mA-WSh">
+                                            <connections>
+                                                <action selector="playerNumberSelection:" destination="dkx-z0-nzr" id="7pk-rK-35v"/>
+                                            </connections>
+                                        </command>
+                                    </children>
+                                </menu>
+                                <state key="normal" title="Nombre de joueurs"/>
+                                <connections>
+                                    <action selector="playerNumberSelection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VpZ-uR-Hz9"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L0k-mj-PDa">
+                                <rect key="frame" x="97" y="440" width="199" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
+                                <menu key="menu" id="m3O-e8-cNx">
+                                    <children>
+                                        <command title="Facile" discoverabilityTitle="Facile" id="FgU-XV-7v9">
+                                            <connections>
+                                                <action selector="playerNumberSelection:" destination="dkx-z0-nzr" id="VA6-y5-cRt"/>
+                                            </connections>
+                                        </command>
+                                        <command title="Difficile" discoverabilityTitle="Difficile" id="RZ9-T2-R9S">
+                                            <connections>
+                                                <action selector="playerNumberSelection:" destination="dkx-z0-nzr" id="QbN-bE-c4w"/>
+                                            </connections>
+                                        </command>
+                                    </children>
+                                </menu>
+                                <state key="normal" title="Difficulté"/>
+                                <connections>
+                                    <action selector="DifficultySelection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="q4T-Mf-Utb"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="L'objectif est d'être le premier à aligner 4 jetons sur la grille, horizontalement, verticalement ou en diagonale." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jlf-Q0-Fdr">
+                                <rect key="frame" x="23" y="182" width="354" height="119"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" red="0.87179487179487181" green="0.88647414026889748" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <navigationItem key="navigationItem" id="b71-Eu-YWP"/>
+                    <connections>
+                        <outlet property="btnJouer" destination="KeC-ul-N1m" id="mlm-Xo-rvc"/>
+                        <outlet property="btn_difficulty" destination="L0k-mj-PDa" id="lX8-8F-7Gj"/>
+                        <outlet property="btn_player" destination="mai-9A-dCp" id="U3y-WD-PYL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-91" y="-9"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="rM6-7c-2d2">
-            <objects>
-                <viewController id="7N4-8o-Qpp" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8rh-eQ-g5S">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OND-R1-xwH">
-                                <rect key="frame" x="162" y="409" width="68" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Jouer"/>
-                                <connections>
-                                    <segue destination="AtO-nx-1Mu" kind="show" id="IKh-Gx-KUF"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="YVx-cj-KJQ"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="EtQ-Lb-5pF"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YAU-1m-650" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="570" y="-9"/>
+            <point key="canvasLocation" x="-112.21374045801527" y="-9.1549295774647899"/>
         </scene>
         <!--Pui4 View Controller-->
         <scene sceneID="o4z-c1-pE7">
@@ -86,6 +123,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ne2-4f-N7E">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="100" contentMode="scaleAspectFit" fixedFrame="YES" image="Grille" translatesAutoresizingMaskIntoConstraints="NO" id="0vB-2R-NdC">
                                 <rect key="frame" x="32" y="304" width="329" height="284"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -181,13 +222,38 @@
                                     <action selector="insertCoin:" destination="AtO-nx-1Mu" eventType="touchUpInside" id="Zhv-qR-Ku9"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="p4Title" translatesAutoresizingMaskIntoConstraints="NO" id="sEW-5w-Rn7">
+                                <rect key="frame" x="24" y="91" width="347" height="174"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ajz-9G-Edf">
+                                <rect key="frame" x="175" y="699" width="0.0" height="0.0"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="C'est le tour du joueur jaune" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WXC-Md-BnV">
+                                <rect key="frame" x="0.0" y="646" width="393" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="CoinJ1" translatesAutoresizingMaskIntoConstraints="NO" id="Ubp-XA-hCY">
+                                <rect key="frame" x="156" y="699" width="80" height="83"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="DMf-ba-cXR"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" red="0.87450981139999995" green="0.88627451660000001" blue="0.99215686319999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
                     <navigationItem key="navigationItem" id="bQc-M3-4VX"/>
                     <connections>
+                        <outlet property="confettiView" destination="Ne2-4f-N7E" id="PDx-EC-A3u"/>
                         <outlet property="grilleImage" destination="0vB-2R-NdC" id="YPm-2J-tVk"/>
+                        <outlet property="roundImg" destination="Ubp-XA-hCY" id="JG4-Gb-UNr"/>
+                        <outlet property="roundLabel" destination="WXC-Md-BnV" id="5Jc-L7-nhd"/>
                         <outletCollection property="buttons" destination="U0H-Qf-ydp" collectionClass="NSMutableArray" id="TfD-V0-p4z"/>
                         <outletCollection property="buttons" destination="yww-h9-i2X" collectionClass="NSMutableArray" id="B72-ah-xze"/>
                         <outletCollection property="buttons" destination="4XI-PZ-SGP" collectionClass="NSMutableArray" id="ksc-pi-VBE"/>
@@ -199,13 +265,15 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CvE-le-Bif" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1241.9847328244275" y="-9.1549295774647899"/>
+            <point key="canvasLocation" x="626.71755725190837" y="-9.1549295774647899"/>
         </scene>
     </scenes>
     <resources>
+        <image name="CoinJ1" width="134" height="135"/>
         <image name="Grille" width="1180" height="1021"/>
         <image name="fleche" width="512" height="512"/>
-        <systemColor name="systemBackgroundColor">
+        <image name="p4Title" width="1024" height="273"/>
+        <systemColor name="tertiarySystemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>

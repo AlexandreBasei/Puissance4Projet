@@ -6,10 +6,14 @@
 //
 
 import UIKit
+import QuartzCore
 
 class Pui4ViewController: UIViewController {
     var nbPlayer = 1
     var currPlayer = 1              //toujours l'humain qui commence
+    
+    var win = false
+    
     var Grille : [[Int]] =
             [ [0,0,0,0,0,0,0],
               [0,0,0,0,0,0,0],
@@ -18,6 +22,10 @@ class Pui4ViewController: UIViewController {
               [0,0,0,0,0,0,0],
               [0,0,0,0,0,0,0],]
     
+    var contenu : [UIImage] = []
+    let j1Img = UIImage(named: "CoinJ1.png")!
+    let j2Img = UIImage(named: "CoinJ2.png")!
+    
     var difficulté : Int = 3        // à modifier avec la page précédente
     var lastCoin : (Int,Int) = (-1,-1)
     var lastAiCoin : (Int,Int) = (-1,-1)
@@ -25,9 +33,18 @@ class Pui4ViewController: UIViewController {
     var directions : [(Int,Int)] = [(0, -1), (-1, -1), (-1,0), (1,-1)]      // dans l'ordre gauche, diagonale gh, haut, diagonale droite-haut
     
     
+    @IBOutlet weak var roundLabel: UILabel!
+    
+    
+    @IBOutlet weak var roundImg: UIImageView!
+    
+    
     @IBOutlet var buttons: [UIButton]!
     
     @IBOutlet var grilleImage: UIImageView!
+    
+    
+    @IBOutlet weak var confettiView: UIView!
     
     
     @IBAction func insertCoin(_ sender: UIButton) {
@@ -41,21 +58,37 @@ class Pui4ViewController: UIViewController {
             
             if checkCombinaisons(cible: 4, player: currPlayer, coin:lastCoin) != nil {
                 print("Joueur n°\(currPlayer) a gagné")
+                roundLabel.text = "Le joueur \((currPlayer == 1) ? "jaune" : "rouge") a gagné !"
+                win = true
+                createConfettiEffect()
                 for i in buttons {
                     i.isEnabled = false
                 }
             }
-            currPlayer = (currPlayer == 1) ? 2 : 1
             
-            if nbPlayer==1 && currPlayer == 2 {
+            if !win {
+                currPlayer = (currPlayer == 1) ? 2 : 1
+                roundImg.image = contenu[currPlayer - 1]
+                roundLabel.text = "C'est le tour du joueur \((currPlayer == 1) ? "jaune" : "rouge")"
+            }
+            
+            if nbPlayer==1 && currPlayer == 2 && !win{
                 iaJouer()
                 if checkCombinaisons(cible: 4, player: currPlayer, coin:lastCoin) != nil {
                     print("Joueur n°\(currPlayer) a gagné")
+                    roundLabel.text = "Le joueur \((currPlayer == 1) ? "jaune" : "rouge") a gagné !"
+                    win = true
+                    createConfettiEffect()
                     for i in buttons {
                         i.isEnabled = false
                     }
                 }
-                currPlayer = 1
+                
+                if !win {
+                    currPlayer = 1
+                    roundImg.image = contenu[currPlayer - 1]
+                    roundLabel.text = "C'est le tour du joueur \((currPlayer == 1) ? "jaune" : "rouge")"
+                }
             }
             print(lastCoin, lastAiCoin)
         }
@@ -221,11 +254,62 @@ class Pui4ViewController: UIViewController {
         return best
     }
 
-    
+    func createConfettiEffect() {
+        let colors: [UIColor] = (currPlayer == 1) ? [.yellow] : [.red] // Couleur des confettis basée sur le joueur
+        let numberOfConfettis = 150 // Nombre de confettis à générer
+        
+        for _ in 0..<numberOfConfettis {
+            let confetti = CALayer()
+            
+            // Définir la taille des confettis
+            let size = CGFloat.random(in: 4...17) // Taille aléatoire du confetti
+            confetti.frame = CGRect(x: CGFloat.random(in: 0...view.bounds.width), y: 0, width: size, height: size)
+            
+//            confetti.cornerRadius = size / 2
+            confetti.backgroundColor = colors.randomElement()?.cgColor
+            
+            // Ajoutez les confettis à la vue
+            view.layer.addSublayer(confetti)
+            
+            // Animation de chûte
+            let fallAnimation = CAKeyframeAnimation(keyPath: "position")
+            fallAnimation.values = [
+                NSValue(cgPoint: confetti.position),
+                NSValue(cgPoint: CGPoint(x: confetti.position.x + CGFloat.random(in: -100...100), y: view.bounds.height + size)) // Déplacement vers le bas
+            ]
+            fallAnimation.keyTimes = [0, 1]
+            fallAnimation.duration = TimeInterval.random(in: 2.0...4.0) // Durée de la chute aléatoire
+            fallAnimation.timingFunctions = [CAMediaTimingFunction(name: .easeInEaseOut)]
+            
+            // Animation de rotation
+            let rotateAnimation = CAKeyframeAnimation(keyPath: "transform.rotation")
+            rotateAnimation.values = [0, CGFloat.random(in: -Double.pi...Double.pi), 0]
+            rotateAnimation.keyTimes = [0, 0.5, 1]
+            rotateAnimation.duration = fallAnimation.duration
+            
+            // Groupement des animations
+            let group = CAAnimationGroup()
+            group.animations = [fallAnimation, rotateAnimation]
+            group.duration = fallAnimation.duration
+            group.isRemovedOnCompletion = false
+            group.fillMode = .forwards
+            
+            // Appliquer l'animation aux confettis
+            confetti.add(group, forKey: "fallingConfetti")
+            
+            // Enlever les confettis après l'animation
+            DispatchQueue.main.asyncAfter(deadline: .now() + group.duration) {
+                confetti.removeFromSuperlayer()
+            }
+        }
+    }
+
+
             
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        contenu = [j1Img, j2Img]
     }
     
 
