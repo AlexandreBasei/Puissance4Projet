@@ -7,8 +7,11 @@
 
 import UIKit
 import QuartzCore
+import AVFoundation
 
 class Pui4ViewController: UIViewController {
+    var audioPlayer: AVAudioPlayer? //Initialisation du lecteur de son pour les bruitages
+
     var nbPlayer = 1
     var currPlayer = 1              //toujours l'humain qui commence
     
@@ -23,6 +26,7 @@ class Pui4ViewController: UIViewController {
               [0,0,0,0,0,0,0],]
     
     var contenu : [UIImage] = []
+    
     let j1Img = UIImage(named: "CoinJ1.png")!
     let j2Img = UIImage(named: "CoinJ2.png")!
     
@@ -60,6 +64,7 @@ class Pui4ViewController: UIViewController {
                 print("Joueur n°\(currPlayer) a gagné")
                 roundLabel.text = "Le joueur \((currPlayer == 1) ? "jaune" : "rouge") a gagné !"
                 win = true
+                playSound(csound: "victorySound")
                 createConfettiEffect()
                 for i in buttons {
                     i.isEnabled = false
@@ -78,7 +83,15 @@ class Pui4ViewController: UIViewController {
                     print("Joueur n°\(currPlayer) a gagné")
                     roundLabel.text = "Le joueur \((currPlayer == 1) ? "jaune" : "rouge") a gagné !"
                     win = true
-                    createConfettiEffect()
+                    // Jouer l'animation et le son de victoire ou de défaite en fonction du gagnant
+                    if currPlayer == 2 {
+                        playSound(csound: "loseSound") //Trouver un son
+                    }
+                    else {
+                        playSound(csound: "victorySound")
+                        createConfettiEffect()
+                    }
+                    
                     for i in buttons {
                         i.isEnabled = false
                     }
@@ -96,6 +109,7 @@ class Pui4ViewController: UIViewController {
     
     
     func animJeton(colonne: Int, ligne: Int, couleur: Int) {
+        playSound()
         let tailleJeton: CGFloat = 40  // Taille du jeton
         let startX = CGFloat(colonne) * (tailleJeton + 5.8) + 40 // Position de départ en X
         let startY: CGFloat = 260  // Position de départ en haut de l'écran
@@ -253,6 +267,32 @@ class Pui4ViewController: UIViewController {
         }
         return best
     }
+    
+    func playSound(csound: String = "") {
+        // Tableau contenant les noms des fichiers audio des jetons
+        let soundFiles = ["pui4audio1", "pui4audio2", "pui4audio3", "pui4audio4"]
+        
+        var sound = csound
+        
+        // Si le son n'est pas custom, jouer un son de jeton aléatoire
+        if sound.isEmpty {
+            sound = soundFiles.randomElement() ?? "pui4audio1" // son joué par défaut en cas d'erreur
+        }
+        
+        // Utilisation de NSDataAsset pour récupérer le fichier audio dans les assets
+        if let audioAsset = NSDataAsset(name: sound) {
+            do {
+                audioPlayer = try AVAudioPlayer(data: audioAsset.data)
+                audioPlayer?.play()
+                print("Son joué : \(sound)")
+            } catch {
+                print("Erreur de lecture du fichier audio: \(error.localizedDescription)")
+            }
+        } else {
+            print("Le fichier audio \(sound) n'a pas été trouvé dans les assets.")
+        }
+    }
+
 
     func createConfettiEffect() {
         let colors: [UIColor] = (currPlayer == 1) ? [.yellow] : [.red] // Couleur des confettis basée sur le joueur
