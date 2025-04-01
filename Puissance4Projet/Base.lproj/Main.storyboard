@@ -76,14 +76,19 @@
                                 <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
                                 <menu key="menu" id="m3O-e8-cNx">
                                     <children>
-                                        <command title="Facile" discoverabilityTitle="Facile" id="FgU-XV-7v9">
-                                            <connections>
-                                                <action selector="playerNumberSelection:" destination="dkx-z0-nzr" id="VA6-y5-cRt"/>
-                                            </connections>
-                                        </command>
                                         <command title="Difficile" discoverabilityTitle="Difficile" id="RZ9-T2-R9S">
                                             <connections>
                                                 <action selector="playerNumberSelection:" destination="dkx-z0-nzr" id="QbN-bE-c4w"/>
+                                            </connections>
+                                        </command>
+                                        <command title="Normal" discoverabilityTitle="Normal" id="pU8-kI-weK">
+                                            <connections>
+                                                <action selector="playerNumberSelection:" destination="dkx-z0-nzr" id="FT5-ld-Ggp"/>
+                                            </connections>
+                                        </command>
+                                        <command title="Facile" discoverabilityTitle="Facile" id="FgU-XV-7v9">
+                                            <connections>
+                                                <action selector="playerNumberSelection:" destination="dkx-z0-nzr" id="VA6-y5-cRt"/>
                                             </connections>
                                         </command>
                                     </children>

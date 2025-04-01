@@ -43,13 +43,19 @@ class ViewController: UIViewController {
         }
         else if sender.title == "Facile" {
             self.btn_difficulty.setTitle(sender.title, for: .normal)
-            difficulty = 1
+            difficulty = 2
+            btnJouer.isEnabled = true
+            btnJouer.layer.opacity = 1
+        }
+        else if sender.title == "Normal" {
+            self.btn_difficulty.setTitle(sender.title, for: .normal)
+            difficulty = 3
             btnJouer.isEnabled = true
             btnJouer.layer.opacity = 1
         }
         else if sender.title == "Difficile" {
             self.btn_difficulty.setTitle(sender.title, for: .normal)
-            difficulty = 3
+            difficulty = 5
             btnJouer.isEnabled = true
             btnJouer.layer.opacity = 1
         }

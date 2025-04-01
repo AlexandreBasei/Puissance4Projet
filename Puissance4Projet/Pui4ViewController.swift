@@ -60,10 +60,11 @@ class Pui4ViewController: UIViewController {
             
             animJeton(colonne: col, ligne: row, couleur: currPlayer)
             
-            if checkCombinaisons(cible: 4, player: currPlayer, coin:lastCoin) != nil {
+            if checkWinner(board: Grille) != nil{
                 print("Joueur n°\(currPlayer) a gagné")
                 roundLabel.text = "Le joueur \((currPlayer == 1) ? "jaune" : "rouge") a gagné !"
                 win = true
+                print(Grille)
                 playSound(csound: "victorySound")
                 createConfettiEffect()
                 for i in buttons {
@@ -78,63 +79,38 @@ class Pui4ViewController: UIViewController {
             }
             
             if nbPlayer==1 && currPlayer == 2 && !win{
-                iaJouer()
-                if checkCombinaisons(cible: 4, player: currPlayer, coin:lastCoin) != nil {
-                    print("Joueur n°\(currPlayer) a gagné")
-                    roundLabel.text = "Le joueur \((currPlayer == 1) ? "jaune" : "rouge") a gagné !"
-                    win = true
-                    // Jouer l'animation et le son de victoire ou de défaite en fonction du gagnant
-                    if currPlayer == 2 {
-                        playSound(csound: "loseSound") //Trouver un son
-                    }
-                    else {
-                        playSound(csound: "victorySound")
-                        createConfettiEffect()
+                for i in buttons {
+                    i.isEnabled = false
+                }
+                print(currPlayer)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.iaJouer()
+                    
+                    if self.checkWinner(board: self.Grille) != nil {
+                        print("Joueur n°\(self.currPlayer) a gagné")
+                        self.roundLabel.text = "Le joueur \((self.currPlayer == 1) ? "jaune" : "rouge") a gagné !"
+                        self.win = true
+                        
+                        // Jouer l'animation et le son de victoire ou de défaite en fonction du gagnant
+                        if self.currPlayer == 2 {
+                            self.playSound(csound: "looseSound") //Trouver un son
+                        }
                     }
                     
-                    for i in buttons {
-                        i.isEnabled = false
+                    if !self.win {
+                        self.currPlayer = 1
+                        self.roundImg.image = self.contenu[self.currPlayer - 1]
+                        self.roundLabel.text = "C'est le tour du joueur \((self.currPlayer == 1) ? "jaune" : "rouge")"
+                        for i in self.buttons {
+                            i.isEnabled = true
+                        }
                     }
-                }
-                
-                if !win {
-                    currPlayer = 1
-                    roundImg.image = contenu[currPlayer - 1]
-                    roundLabel.text = "C'est le tour du joueur \((currPlayer == 1) ? "jaune" : "rouge")"
                 }
             }
             print(lastCoin, lastAiCoin)
         }
     }
-    
-    
-    func animJeton(colonne: Int, ligne: Int, couleur: Int) {
-        playSound()
-        let tailleJeton: CGFloat = 40  // Taille du jeton
-        let startX = CGFloat(colonne) * (tailleJeton + 5.8) + 40 // Position de départ en X
-        let startY: CGFloat = 260  // Position de départ en haut de l'écran
-
-        // Sélection de l'image selon le joueur
-        let jeton = UIImageView(image: UIImage(named: "CoinJ"+String(couleur)))
-        jeton.frame = CGRect(x: startX, y: startY, width: tailleJeton, height: tailleJeton)
-        
-        // Assurer que le jeton est ajouté sous la grille
-        self.view.insertSubview(jeton, belowSubview: grilleImage)
-            
-        // Position finale en fonction de la ligne de la grille
-        let finalY = CGFloat(ligne) * (tailleJeton + 6) + 308
-            
-
-        // Animation de chute
-        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseOut) {
-            jeton.frame.origin.y = finalY
-        } completion: { _ in
-            print("Jeton inséré en (\(ligne), \(colonne))")
-        }
-    }
-    
-    
-    
+       
     func mettreJeton(x: Int)->(Int,Int)? {
         for y in (0..<Grille.count).reversed() {
             // on regarde à quelle ligne, la colonne chosie est libre (donc on part du bas vers le haut car c'est plus simple dans notre esprit)
@@ -189,83 +165,205 @@ class Pui4ViewController: UIViewController {
         return count - 1 //On soustrait 1 car on a compté le jeton actuel deux fois
     }
     
-    // fonctions min-max pour IA
+    // FONCTION MIN MAX IA ---------------------------
     
     func iaJouer() {
-        var bestVal = -Int.max
-        var bestMove = -1
-        for col in 0..<Grille[0].count {
-            let resultat = mettreJeton(x: col)
-            if let _ = resultat {
-                let (y, x) = resultat!
-                let moveVal = minimax(board: Grille, depth: difficulté, isMaximizingPlayer: false)
-                if moveVal > bestVal {
-                    bestVal = moveVal
-                    bestMove = col
-                }
-                Grille[y][x] = 0  // Annule le mouvement
+        let meilleurCoup = findBestMove(board: &Grille, maxDepth: difficulté)
+        
+        if let colonne = meilleurCoup {
+            if let (ligne, _) = self.mettreJeton(x: colonne) {
+                lastAiCoin = (ligne, colonne)
+                animJeton(colonne: colonne, ligne: ligne, couleur: 2)
             }
-        }
-        if bestMove != -1 {
-            let result = mettreJeton(x: bestMove)
-            lastCoin = result!
-            animJeton(colonne: bestMove, ligne: lastCoin.0, couleur: 2)  // L'IA joue
         }
     }
     
-    func evaluer(board: [[Int]], coinjoue: (Int,Int)) -> Int {
-        // Vérifier les combinaisons de 4 jetons
-        if checkCombinaisons(cible: 4, player: 2, coin: coinjoue) != nil {
-            return 1000  // L'IA gagne
+    // Vérifie s'il reste au moins une colonne où jouer (la case en haut de la colonne est vide)
+    func isMovesLeft(board: [[Int]]) -> Bool {
+        for col in 0..<board[0].count {
+            if board[0][col] == 0 {
+                return true
+            }
         }
-        if checkCombinaisons(cible: 4, player: 1, coin: coinjoue) != nil {
-            return -1000  // L'humain gagne
-        }
-
-        // Vérifier les combinaisons de 3 jetons
-        if checkCombinaisons(cible: 3, player: 2, coin: coinjoue) != nil {
-            return 500  // L'IA peut gagner dans les prochains tours
-        }
-        if checkCombinaisons(cible: 3, player: 1, coin: coinjoue) != nil {
-            return -500  // L'humain peut gagner, il faut bloquer
-        }
-
-        return 0  // Aucune combinaison trouvée
+        return false
     }
 
-    func minimax(board: [[Int]], depth: Int, isMaximizingPlayer: Bool) -> Int {
-        let score = evaluer(board: board, coinjoue: lastCoin)
+    // Simule le dépôt d'un jeton dans une colonne pour un joueur donné
+    // Retourne la ligne où le jeton a été posé ou nil si la colonne est pleine
+    func dropCoin(board: inout [[Int]], col: Int, player: Int) -> Int? {
+        for row in (0..<board.count).reversed() {
+            if board[row][col] == 0 {
+                board[row][col] = player
+                return row
+            }
+        }
+        return nil
+    }
 
-        // Terminer si un joueur a gagné ou si la profondeur maximale est atteinte
-        if score == 1000 || score == -1000 || depth == 0 {
+    // Annule un coup en remettant à zéro la cellule (row, col)
+    func removeCoin(board: inout [[Int]], row: Int, col: Int) {
+        board[row][col] = 0
+    }
+    // Vérifie si un joueur a gagné dans la grille optimisée
+    // Retourne le numéro du joueur gagnant (1 ou 2) si une combinaison de 4 est trouvée, sinon nil
+    
+    func checkWinner(board: [[Int]]) -> Int? {
+        let rows = board.count, cols = board[0].count
+        // On définit les 4 directions de recherche : horizontale, verticale et les 2 diagonales
+        let directions = [(0, 1), (1, 0), (1, 1), (1, -1)]
+        
+        // Parcourt chaque cellule de la grille
+        for row in 0..<rows {
+            for col in 0..<cols {
+                let player = board[row][col]
+                if player == 0 { continue } // Cellule vide, on passe au suivant
+                
+                // Pour chaque direction, on compte le nombre de jetons identiques
+                for (dx, dy) in directions {
+                    // Compte le jeton courant + ceux dans le sens positif et négatif
+                    let count = 1 +
+                        countDirection(board: board, row: row, col: col, dx: dx, dy: dy, player: player) +
+                        countDirection(board: board, row: row, col: col, dx: -dx, dy: -dy, player: player)
+                    
+                    // Si on atteint 4, le joueur gagne
+                    if count >= 4 {
+                        return player
+                    }
+                }
+            }
+        }
+        return nil
+    }
+
+    // Compte le nombre de jetons identiques à partir d'une cellule donnée, dans une direction donnée (dx, dy)
+    func countDirection(board: [[Int]], row: Int, col: Int, dx: Int, dy: Int, player: Int) -> Int {
+        var count = 0
+        var currentRow = row + dx
+        var currentCol = col + dy
+        let rows = board.count, cols = board[0].count
+        
+        // Tant que l'on reste dans les bornes et que le jeton est identique, on incrémente
+        while currentRow >= 0, currentRow < rows, currentCol >= 0, currentCol < cols,
+              board[currentRow][currentCol] == player {
+            count += 1
+            currentRow += dx
+            currentCol += dy
+        }
+        return count
+    }
+    
+    // Fonction d'évaluation de l'état du plateau
+    // Renvoie une valeur positive si l'IA (joueur 2) est gagnante, négative si le joueur 1 l'est
+    // Le paramètre 'depth' permet d'influencer le score pour favoriser les victoires rapides
+    func evaluateBoard(board: [[Int]], depth: Int) -> Int {
+        if let winner = checkWinner(board: board) {
+            if winner == 2 { // IA gagne
+                return 1000 - depth
+            } else if winner == 1 { // Humain gagne
+                return -1000 + depth
+            }
+        }
+        return 0
+    }
+    
+    // Algorithme Minimax avec élagage Alpha-Bêta
+    // - board: grille actuelle
+    // - depth: niveau de récursion actuel
+    // - maxDepth: profondeur maximale (pour limiter le temps de calcul)
+    // - alpha et beta: valeurs pour l'élagage
+    // - maximizingPlayer: true si c'est le tour de l'IA (joueur 2), false sinon
+    func minimax(board: inout [[Int]], depth: Int, maxDepth: Int, alpha: Int, beta: Int, maximizingPlayer: Bool) -> Int {
+        var alpha = alpha
+        var beta = beta
+        let score = evaluateBoard(board: board, depth: depth)
+        
+        // Condition d'arrêt : victoire ou profondeur maximale ou plateau plein
+        if abs(score) >= (1000 - depth) || depth == maxDepth || !isMovesLeft(board: board) {
             return score
         }
-
-        var best: Int
-        if isMaximizingPlayer {
-            best = -Int.max
+        
+        if maximizingPlayer {
+            var maxEval = -10000
             for col in 0..<board[0].count {
-                let resultat = mettreJeton(x: col)
-                if let _ = resultat {
-                    let (y, x) = resultat!
-                    let moveVal = minimax(board: board, depth: depth - 1, isMaximizingPlayer: false)
-                    best = max(best, moveVal)
-                    Grille[y][x] = 0  // Annule le mouvement après évaluation
+                // Si la colonne n'est pas pleine
+                if board[0][col] == 0 {
+                    if let row = dropCoin(board: &board, col: col, player: 2) {
+                        let eval = minimax(board: &board, depth: depth + 1, maxDepth: maxDepth, alpha: alpha, beta: beta, maximizingPlayer: false)
+                        removeCoin(board: &board, row: row, col: col)
+                        maxEval = max(maxEval, eval)
+                        alpha = max(alpha, eval)
+                        if beta <= alpha { break }
+                    }
                 }
             }
+            return maxEval
         } else {
-            best = Int.max
+            var minEval = 10000
             for col in 0..<board[0].count {
-                let resultat = mettreJeton(x: col)
-                if let _ = resultat {
-                    let (y, x) = resultat!
-                    let moveVal = minimax(board: board, depth: depth - 1, isMaximizingPlayer: true)
-                    best = min(best, moveVal)
-                    Grille[y][x] = 0  // Annule le mouvement après évaluation
+                if board[0][col] == 0 {
+                    if let row = dropCoin(board: &board, col: col, player: 1) {
+                        let eval = minimax(board: &board, depth: depth + 1, maxDepth: maxDepth, alpha: alpha, beta: beta, maximizingPlayer: true)
+                        removeCoin(board: &board, row: row, col: col)
+                        minEval = min(minEval, eval)
+                        beta = min(beta, eval)
+                        if beta <= alpha { break }
+                    }
+                }
+            }
+            return minEval
+        }
+    }
+
+    // Trouve le meilleur coup pour l'IA et retourne l'indice de la colonne
+    // maxDepth permet de régler la difficulté en limitant la profondeur de recherche
+    func findBestMove(board: inout [[Int]], maxDepth: Int) -> Int? {
+        var bestScore = -10000
+        var bestColumn: Int? = nil
+        var alpha = -10000
+        var beta = 10000
+        
+        for col in 0..<board[0].count {
+            // On ne teste que les colonnes non pleines
+            if board[0][col] == 0 {
+                if let row = dropCoin(board: &board, col: col, player: 2) {
+                    let score = minimax(board: &board, depth: 0, maxDepth: maxDepth, alpha: alpha, beta: beta, maximizingPlayer: false)
+                    removeCoin(board: &board, row: row, col: col)
+                    if score > bestScore {
+                        bestScore = score
+                        bestColumn = col
+                    }
                 }
             }
         }
-        return best
+        return bestColumn
+    }
+    
+    // fonction pour le style ---------------------------
+    
+    
+    func animJeton(colonne: Int, ligne: Int, couleur: Int) {
+        playSound()
+        let tailleJeton: CGFloat = 40  // Taille du jeton
+        let startX = CGFloat(colonne) * (tailleJeton + 5.8) + 40 // Position de départ en X
+        let startY: CGFloat = 260  // Position de départ en haut de l'écran
+
+        // Sélection de l'image selon le joueur
+        let jeton = UIImageView(image: UIImage(named: "CoinJ"+String(couleur)))
+        jeton.frame = CGRect(x: startX, y: startY, width: tailleJeton, height: tailleJeton)
+        
+        // Assurer que le jeton est ajouté sous la grille
+        self.view.insertSubview(jeton, belowSubview: grilleImage)
+            
+        // Position finale en fonction de la ligne de la grille
+        let finalY = CGFloat(ligne) * (tailleJeton + 6) + 308
+            
+
+        // Animation de chute
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseOut) {
+            jeton.frame.origin.y = finalY
+        } completion: { _ in
+            print("Jeton inséré en (\(ligne), \(colonne))")
+        }
     }
     
     func playSound(csound: String = "") {
